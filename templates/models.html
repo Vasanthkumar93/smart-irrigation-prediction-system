@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Model Evaluation & Comparison - Smart Irrigation Prediction{% endblock %}
+
+{% block content %}
+<div class="card-header" style="border: none; padding-bottom: 0;">
+  <div>
+    <h1 class="card-title" style="font-size: 1.85rem;">
+      <i class="fa-solid fa-chart-line"></i> Machine Learning Model Benchmark
+    </h1>
+    <p class="card-subtitle">
+      Comparative performance analysis across Decision Tree, Random Forest, and Logistic Regression algorithms.
+    </p>
+  </div>
+</div>
+
+<!-- Comparison Table Card -->
+<section class="card" style="margin-top: 24px;">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-trophy text-primary"></i> Algorithm Performance Scorecard
+      </h2>
+      <p class="card-subtitle">Evaluated on a 20% stratified holdout test dataset.</p>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Algorithm</th>
+          <th>Accuracy</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1-Score</th>
+          <th>Scaler Required</th>
+          <th>Selection Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for name, m in models.items() %}
+        <tr>
+          <td>
+            <strong>{{ name }}</strong>
+          </td>
+          <td><strong>{{ (m.accuracy * 100) | round(2) }}%</strong></td>
+          <td>{{ (m.precision * 100) | round(2) }}%</td>
+          <td>{{ (m.recall * 100) | round(2) }}%</td>
+          <td><strong style="color: var(--primary-dark);">{{ (m.f1_score * 100) | round(2) }}%</strong></td>
+          <td>
+            {% if m.uses_scaler %}
+              <span class="badge-tag" style="background: #e0f2fe; color: #0369a1;">StandardScaler</span>
+            {% else %}
+              <span class="badge-tag" style="background: #f1f5f9; color: #64748b;">Raw Features</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if name == best_model %}
+              <span class="badge-tag badge-winner"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Selected Best Model</span>
+            {% else %}
+              <span class="badge-tag" style="background: #f8fafc; color: #94a3b8;">Evaluated</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Visualizations Grid -->
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-chart-column"></i> Visual Performance Analytics
+      </h2>
+      <p class="card-subtitle">Generated automatically via Matplotlib & Seaborn during model training.</p>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <!-- Chart 1: Model Comparison -->
+    <div class="chart-box">
+      <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-darker); margin-bottom: 12px;">
+        Model Metrics Comparison
+      </h3>
+      <img src="{{ url_for('static', filename='images/model_comparison.png') }}" alt="Model Comparison Chart" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<p class=\'text-muted\'>Run python train_model.py to render chart.</p>';">
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+        Side-by-side comparison across Accuracy, Precision, Recall, and F1-Score.
+      </p>
+    </div>
+
+    <!-- Chart 2: Feature Importance -->
+    <div class="chart-box">
+      <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-darker); margin-bottom: 12px;">
+        Feature Importance Breakdown
+      </h3>
+      <img src="{{ url_for('static', filename='images/feature_importance.png') }}" alt="Feature Importance Chart" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<p class=\'text-muted\'>Run python train_model.py to render chart.</p>';">
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+        Relative influence of each soil and weather parameter on the irrigation decision.
+      </p>
+    </div>
+
+    <!-- Chart 3: Confusion Matrix -->
+    <div class="chart-box" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+      <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-darker); margin-bottom: 12px;">
+        Confusion Matrix (Champion Model: {{ best_model }})
+      </h3>
+      <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}" alt="Confusion Matrix Chart" onerror="this.onerror=null; this.src=''; this.parentElement.innerHTML='<p class=\'text-muted\'>Run python train_model.py to render chart.</p>';">
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+        True Positives (correctly irrigated), True Negatives (correctly conserved), and minimal classification errors.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Academic Metrics Explanation -->
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-graduation-cap"></i> Evaluation Metrics in Precision Agriculture
+      </h2>
+      <p class="card-subtitle">Why each metric matters in this engineering domain.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="margin-bottom: 0;">
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px;">
+        <i class="fa-solid fa-bullseye"></i> Accuracy
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Measures total correct predictions (both irrigation and non-irrigation) over all test samples. High overall accuracy ensures baseline reliability.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: var(--secondary); margin-bottom: 6px;">
+        <i class="fa-solid fa-filter"></i> Precision
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        When the model predicts <em>"Irrigate"</em>, how often is water actually needed? High precision eliminates false alarms and saves water pump electricity.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: #ea580c; margin-bottom: 6px;">
+        <i class="fa-solid fa-magnifying-glass-chart"></i> Recall (Sensitivity)
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Out of all cases where the field genuinely needed water, how many did the system catch? Crucial to avoid crop wilting caused by false negatives.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: #7c3aed; margin-bottom: 6px;">
+        <i class="fa-solid fa-scale-balanced"></i> F1-Score
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        The harmonic mean of Precision and Recall. Our system automatically ranks and chooses the best algorithm based on the highest F1-Score for optimal balance.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

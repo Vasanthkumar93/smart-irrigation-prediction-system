@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction History - Smart Irrigation System{% endblock %}
+
+{% block content %}
+<div class="card-header" style="border: none; padding-bottom: 0;">
+  <div>
+    <h1 class="card-title" style="font-size: 1.85rem;">
+      <i class="fa-solid fa-clock-rotate-left"></i> Historical Prediction Log
+    </h1>
+    <p class="card-subtitle">
+      Audit trail of all predictions generated and saved into the embedded SQLite database.
+    </p>
+  </div>
+  {% if records %}
+  <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+    <button type="button" id="exportHistoryBtn" class="btn btn-outline-dark" style="padding: 8px 16px; font-size: 0.85rem;">
+      <i class="fa-solid fa-file-csv text-primary"></i> Export to CSV
+    </button>
+    <form method="POST" action="{{ url_for('clear_history') }}" onsubmit="return confirm('Are you sure you want to permanently clear the prediction history log?');">
+      <button type="submit" class="btn btn-danger" style="padding: 8px 16px; font-size: 0.85rem;">
+        <i class="fa-solid fa-trash-can"></i> Clear All Records
+      </button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<section class="card" style="margin-top: 24px;">
+  {% if records %}
+  <div class="table-responsive">
+    <table class="data-table" id="historyTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Timestamp</th>
+          <th>Moisture</th>
+          <th>Temp</th>
+          <th>Humidity</th>
+          <th>Rainfall</th>
+          <th>Prediction</th>
+          <th>Confidence</th>
+          <th>Advisory Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in records %}
+        <tr>
+          <td><strong>{{ row[0] }}</strong></td>
+          <td><small>{{ row[1] }}</small></td>
+          <td>{{ row[2] }}%</td>
+          <td>{{ row[3] }}°C</td>
+          <td>{{ row[4] }}%</td>
+          <td>{{ row[5] }} mm</td>
+          <td>
+            {% if row[6] == 1 %}
+              <span class="badge-tag badge-yes"><i class="fa-solid fa-droplet"></i> Irrigate (Yes)</span>
+            {% else %}
+              <span class="badge-tag badge-no"><i class="fa-solid fa-check"></i> No Need</span>
+            {% endif %}
+          </td>
+          <td><strong>{{ row[8] }}%</strong></td>
+          <td><small style="color: var(--text-muted);">{{ row[9] }}</small></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon text-primary">
+      <i class="fa-solid fa-folder-open"></i>
+    </div>
+    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary-darker); margin-bottom: 8px;">
+      No Predictions Recorded Yet
+    </h3>
+    <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 20px;">
+      Your prediction audit log is currently empty. Run an irrigation prediction to automatically persist test records here.
+    </p>
+    <a href="{{ url_for('predict') }}" class="btn btn-primary">
+      <i class="fa-solid fa-calculator"></i> Make First Prediction
+    </a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

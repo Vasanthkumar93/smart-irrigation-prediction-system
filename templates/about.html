@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}About - Smart Irrigation Prediction System{% endblock %}
+
+{% block content %}
+<div class="card-header" style="border: none; padding-bottom: 0;">
+  <div>
+    <h1 class="card-title" style="font-size: 1.85rem;">
+      <i class="fa-solid fa-book-open"></i> Project Overview & Methodology
+    </h1>
+    <p class="card-subtitle">
+      Comprehensive documentation for Final Year AI & Data Science / Computer Science Project.
+    </p>
+  </div>
+</div>
+
+<!-- Problem Statement Card -->
+<section class="card" style="margin-top: 24px;">
+  <div class="card-header">
+    <h2 class="card-title" style="font-size: 1.25rem;">
+      <i class="fa-solid fa-circle-exclamation text-primary"></i> Problem Statement & Motivation
+    </h2>
+  </div>
+  <p style="margin-bottom: 14px; font-size: 0.95rem; color: var(--text-main);">
+    Agriculture accounts for approximately <strong>70% of global freshwater withdrawals</strong>. Conventional irrigation in developing countries is predominantly managed through rigid time schedules or manual visual inspection of the field.
+  </p>
+  <p style="margin-bottom: 14px; font-size: 0.95rem; color: var(--text-main);">
+    This manual approach leads to two severe failure modes:
+  </p>
+  <ul style="margin-left: 24px; margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem;">
+    <li style="margin-bottom: 8px;">
+      <strong style="color: #b91c1c;">Over-Irrigation:</strong> Leaches vital nutrients below the root zone, promotes root asphyxiation and fungal growth, wastes pumped electricity, and rapidly depletes groundwater tables.
+    </li>
+    <li>
+      <strong style="color: #b91c1c;">Under-Irrigation:</strong> Causes agricultural drought stress, permanently damages plant cellular structure, and stunts crop harvest yields.
+    </li>
+  </ul>
+  <p style="font-size: 0.95rem; color: var(--text-main);">
+    <strong>Proposed Solution:</strong> An intelligent Machine Learning classification system that analyzes key agricultural and atmospheric variables (Soil Moisture, Ambient Temperature, Relative Humidity, and Precipitation) to accurately predict whether irrigation is required, recommending exact water volume and application windows.
+  </p>
+</section>
+
+<!-- Agronomic Theory Card -->
+<section class="card">
+  <div class="card-header">
+    <h2 class="card-title" style="font-size: 1.25rem;">
+      <i class="fa-solid fa-leaf text-primary"></i> Agro-Meteorological Principles
+    </h2>
+  </div>
+  <div class="stats-grid" style="margin-bottom: 0;">
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px;">
+        1. Soil Moisture Dynamic
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Measures volumetric water content ($\theta$). Between <em>Field Capacity</em> (FC) and the <em>Permanent Wilting Point</em> (PWP), plants easily extract moisture. Below the Management Allowed Depletion (MAD &approx; 28-30%), irrigation is triggered.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px;">
+        2. Evapotranspiration (ET)
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Crop water loss is driven by thermal energy and vapor pressure deficit (VPD). High temperature combined with dry air (&lt;35% RH) increases transpiration exponentially, accelerating soil water depletion.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1rem; color: var(--primary-dark); margin-bottom: 6px;">
+        3. Effective Rainfall ($P_{eff}$)
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Not all precipitation reaches crop roots. Rainfall &gt; 10 mm replenishes topsoil and temporarily suppresses irrigation demand regardless of prior moisture depletion.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ML Architecture Card -->
+<section class="card">
+  <div class="card-header">
+    <h2 class="card-title" style="font-size: 1.25rem;">
+      <i class="fa-solid fa-brain text-primary"></i> Machine Learning Algorithms & Selection
+    </h2>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div style="background: var(--bg-main); padding: 18px; border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+        Decision Tree Classifier
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Constructs recursive orthogonal decision boundaries based on feature Gini impurity reduction. Highly interpretable, mirrors real-world agronomist heuristics (e.g. <em>If soil_moisture &lt; 28% and rain == 0, then irrigate</em>).
+      </p>
+    </div>
+
+    <div style="background: var(--bg-main); padding: 18px; border-radius: var(--radius-md); border-left: 4px solid #3b82f6;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+        Random Forest Classifier (Ensemble)
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Aggregates an ensemble of 100 decorrelated decision trees using bootstrap aggregating (bagging) and random feature subsets. Drastically minimizes overfitting variance and captures subtle non-linear climate interactions with high generalization accuracy.
+      </p>
+    </div>
+
+    <div style="background: var(--bg-main); padding: 18px; border-radius: var(--radius-md); border-left: 4px solid #f59e0b;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+        Logistic Regression
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        A linear probabilistic classifier mapped through the sigmoid activation function $P(y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \mathbf{\beta}^T \mathbf{X})}}$. Serves as an essential baseline and demonstrates the necessity of non-linear tree models for complex weather thresholds.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack Card -->
+<section class="card">
+  <div class="card-header">
+    <h2 class="card-title" style="font-size: 1.25rem;">
+      <i class="fa-solid fa-layer-group text-primary"></i> Technology Stack
+    </h2>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Technology</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Core Language</strong></td>
+          <td>Python 3.10+</td>
+          <td>Underlying runtime for data preprocessing, training, and backend services.</td>
+        </tr>
+        <tr>
+          <td><strong>Web Framework</strong></td>
+          <td>Flask (Werkzeug / Jinja2)</td>
+          <td>Lightweight, asynchronous-friendly WSGI web application server and routing.</td>
+        </tr>
+        <tr>
+          <td><strong>Machine Learning</strong></td>
+          <td>Scikit-learn, NumPy, Pandas</td>
+          <td>Model training, stratified cross-validation, standardization, and metrics evaluation.</td>
+        </tr>
+        <tr>
+          <td><strong>Data Visualization</strong></td>
+          <td>Matplotlib &amp; Seaborn</td>
+          <td>Automated chart rendering (Confusion Matrices, Feature Importance, Metrics Comparison).</td>
+        </tr>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>SQLite3</td>
+          <td>Zero-configuration persistent transactional storage for prediction audit logs.</td>
+        </tr>
+        <tr>
+          <td><strong>Frontend</strong></td>
+          <td>HTML5, CSS3, JavaScript ES6</td>
+          <td>Agricultural-themed responsive dashboard, synchronized input sliders, CSV export.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

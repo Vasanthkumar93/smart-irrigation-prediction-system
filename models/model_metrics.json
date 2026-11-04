@@ -1,0 +1,70 @@
+{
+    "best_model": "Logistic Regression",
+    "features": [
+        "soil_moisture",
+        "temperature",
+        "humidity",
+        "rainfall"
+    ],
+    "models_evaluated": {
+        "Logistic Regression": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "confusion_matrix": [
+                [
+                    148,
+                    0
+                ],
+                [
+                    0,
+                    152
+                ]
+            ],
+            "uses_scaler": true
+        },
+        "Decision Tree": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "confusion_matrix": [
+                [
+                    148,
+                    0
+                ],
+                [
+                    0,
+                    152
+                ]
+            ],
+            "uses_scaler": false
+        },
+        "Random Forest": {
+            "accuracy": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1_score": 1.0,
+            "confusion_matrix": [
+                [
+                    148,
+                    0
+                ],
+                [
+                    0,
+                    152
+                ]
+            ],
+            "uses_scaler": false
+        }
+    },
+    "feature_importance": {
+        "Soil Moisture": 0.4615,
+        "Temperature": 0.1579,
+        "Humidity": 0.3805,
+        "Rainfall": 0.0
+    },
+    "dataset_size": 1500,
+    "test_size": 300
+}

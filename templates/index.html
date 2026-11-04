@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Smart Irrigation Prediction System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <span class="hero-tag"><i class="fa-solid fa-leaf"></i> AI-Driven Precision Agriculture</span>
+  <h1 class="hero-title">Smart Irrigation Prediction System</h1>
+  <p class="hero-subtitle">
+    Predict whether irrigation is required by analyzing critical environmental parameters:
+    <strong>Soil Moisture</strong>, <strong>Ambient Temperature</strong>, <strong>Relative Humidity</strong>, and <strong>Recent Rainfall</strong>.
+    Protect crops from moisture stress while eliminating agricultural water wastage.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ url_for('predict') }}" class="btn btn-primary">
+      <i class="fa-solid fa-calculator"></i> Start Irrigation Prediction
+    </a>
+    <a href="{{ url_for('models_view') }}" class="btn btn-outline">
+      <i class="fa-solid fa-chart-pie"></i> View Model Comparisons
+    </a>
+  </div>
+</section>
+
+<!-- Stats Grid -->
+<section class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon">
+      <i class="fa-solid fa-brain"></i>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value">{{ best_model }}</span>
+      <span class="stat-label">Best Selected Model</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background-color: #dbeafe; color: #1d4ed8;">
+      <i class="fa-solid fa-bullseye"></i>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value">{{ best_accuracy }}%</span>
+      <span class="stat-label">Model Accuracy</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background-color: #fef3c7; color: #b45309;">
+      <i class="fa-solid fa-database"></i>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value">{{ total_predictions }}</span>
+      <span class="stat-label">Predictions Logged</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background-color: #e0f2fe; color: #0284c7;">
+      <i class="fa-solid fa-hand-holding-droplet"></i>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value">~38%</span>
+      <span class="stat-label">Estimated Water Savings</span>
+    </div>
+  </div>
+</section>
+
+<!-- Core Features Overview -->
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title"><i class="fa-solid fa-microchip"></i> System Capabilities & Pipeline</h2>
+      <p class="card-subtitle">End-to-end Machine Learning decision support for smart farming.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="margin-bottom: 0;">
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 8px;">
+        <i class="fa-solid fa-network-wired"></i> 3 ML Algorithms Compared
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Implements and evaluates <strong>Decision Tree</strong>, <strong>Random Forest</strong>, and <strong>Logistic Regression</strong>. The system automatically benchmarks accuracy, precision, recall, and F1-score to pick the champion model.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 8px;">
+        <i class="fa-solid fa-cloud-sun-rain"></i> Agro-Climatic Parameters
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Takes into account soil water depletion thresholds alongside evapotranspiration variables (temperature and humidity) and recent precipitation events.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 8px;">
+        <i class="fa-solid fa-clipboard-check"></i> Actionable Guidance
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Doesn't just output Yes/No. Provides recommended water volume (mm), ideal watering windows (dawn/dusk), drip vs sprinkler advice, and weather alerts.
+      </p>
+    </div>
+
+    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+      <h3 style="font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 8px;">
+        <i class="fa-solid fa-code"></i> REST API & Local Storage
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Includes an embedded SQLite database for audit trails, plus a JSON REST API endpoint (<code>/api/predict</code>) ready for future IoT microcontrollers.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Prediction Activity -->
+{% if recent_predictions %}
+<section class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Prediction Activity</h2>
+      <p class="card-subtitle">Last 5 predictions recorded by the system.</p>
+    </div>
+    <a href="{{ url_for('history') }}" class="btn btn-outline-dark" style="padding: 6px 14px; font-size: 0.85rem;">
+      View Full History &rarr;
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Soil Moisture</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Rainfall</th>
+          <th>Prediction</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in recent_predictions %}
+        <tr>
+          <td><small>{{ row[0] }}</small></td>
+          <td><strong>{{ row[1] }}%</strong></td>
+          <td>{{ row[2] }}°C</td>
+          <td>{{ row[3] }}%</td>
+          <td>{{ row[4] }} mm</td>
+          <td>
+            {% if row[5] == 'Yes' %}
+              <span class="badge-tag badge-yes"><i class="fa-solid fa-droplet"></i> Irrigate</span>
+            {% else %}
+              <span class="badge-tag badge-no"><i class="fa-solid fa-check"></i> No Need</span>
+            {% endif %}
+          </td>
+          <td>{{ row[6] }}%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
